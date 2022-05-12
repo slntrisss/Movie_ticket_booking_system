@@ -1,4 +1,4 @@
-package org.billboard.service;
+package org.billboard.service.dao;
 
 import org.billboard.model.Genre;
 import org.billboard.model.MovieGenre;
@@ -11,12 +11,10 @@ import java.util.List;
 
 @Service
 public class MovieGenreService {
-    private final CrudRepository<MovieGenre> movieGenreRepo;
     private final GenreDao genreDao;
 
     @Autowired
-    public MovieGenreService(CrudRepository<MovieGenre> movieGenreRepo, GenreDao genreDao) {
-        this.movieGenreRepo = movieGenreRepo;
+    public MovieGenreService(GenreDao genreDao) {
         this.genreDao = genreDao;
     }
 

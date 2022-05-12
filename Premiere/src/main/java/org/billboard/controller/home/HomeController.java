@@ -2,8 +2,8 @@ package org.billboard.controller.home;
 
 import org.billboard.dto.home.MoviePoster;
 import org.billboard.model.Cinema;
-import org.billboard.service.CinemaService;
-import org.billboard.service.MovieService;
+import org.billboard.service.dao.CinemaService;
+import org.billboard.service.dao.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

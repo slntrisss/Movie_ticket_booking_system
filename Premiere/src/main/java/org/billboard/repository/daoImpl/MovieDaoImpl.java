@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class MovieDaoImpl implements CrudRepository<Movie>, MovieDao {
+public class MovieDaoImpl implements MovieDao<Movie> {
 
     private final  JdbcTemplate jdbcTemplate;
     private static final String getAllMovies = "SELECT * FROM movie";
@@ -21,11 +21,21 @@ public class MovieDaoImpl implements CrudRepository<Movie>, MovieDao {
             "FROM movie m, detail d " +
             "WHERE m.movie_id = d.movie_id " +
             "AND current_date<d.release_date";
-    private static final String getKidsMovies = "select distinct m.movie_id,  m.movie_name, m.image_file " +
-            "from movie m, movie_genre mg, genre g " +
-            "where m.movie_id=mg.movie_id " +
-            "and mg.genre_id=g.genre_id " +
-            "and g.genre_type IN ('cartoon', 'animation', 'family movie')";
+    private static final String getKidsMovies = "SELECT DISTINCT m.movie_id,  m.movie_name, m.image_file " +
+            "FROM movie m, movie_genre mg, genre g " +
+            "WHERE m.movie_id=mg.movie_id " +
+            "AND mg.genre_id=g.genre_id " +
+            "AND g.genre_type IN ('cartoon', 'animation', 'family movie')";
+    private static final String getAllMoviesByCinemaId =
+            "SELECT DISTINCT m.movie_id, m.movie_name, m.image_file " +
+            "FROM movie m " +
+            "JOIN schedule s " +
+            "    ON m.movie_id = s.movie_id " +
+            "JOIN cinema_hall ch " +
+            "    ON ch.cinema_hall_id = s.cinema_hall_id " +
+            "JOIN cinema c " +
+            "    ON c.cinema_id = ch.cinema_id " +
+            "WHERE c.cinema_id=?";
     @Autowired
     public MovieDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -59,5 +69,11 @@ public class MovieDaoImpl implements CrudRepository<Movie>, MovieDao {
     @Override
     public List<Movie> getKidsMovies() {
         return jdbcTemplate.query(getKidsMovies, new BeanPropertyRowMapper<>(Movie.class));
+    }
+
+    @Override
+    public List<Movie> getAllMoviesByCinemaId(int cinemaId) {
+        return jdbcTemplate.query(getAllMoviesByCinemaId,
+                new BeanPropertyRowMapper<>(Movie.class), cinemaId);
     }
 }

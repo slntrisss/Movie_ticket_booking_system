@@ -1,9 +1,8 @@
-package org.billboard.service;
+package org.billboard.service.dao;
 
 import org.billboard.dto.home.MoviePoster;
-import org.billboard.model.Genre;
-import org.billboard.model.Movie;
-import org.billboard.repository.dao.CrudRepository;
+import org.billboard.dto.movie.MovieDetail;
+import org.billboard.model.*;
 import org.billboard.repository.dao.MovieDao;
 import org.springframework.stereotype.Service;
 
@@ -15,27 +14,43 @@ import java.util.Locale;
 
 @Service
 public class MovieService {
-    private final CrudRepository<Movie> movieRepo;
     private final DetailService detailService;
     private final MovieGenreService genreService;
-    private final MovieDao movieDao;
+    private final MovieDao<Movie> movieRepo;
+    private final RoleDetailService roleDetailService;
 
-    public MovieService(CrudRepository<Movie> movieRepo,
-                        DetailService detailService,
+    public MovieService(DetailService detailService,
                         MovieGenreService genreService,
-                        MovieDao movieDao) {
-        this.movieRepo = movieRepo;
+                        MovieDao<Movie> movieRepo,
+                        RoleDetailService roleDetailService) {
         this.detailService = detailService;
         this.genreService = genreService;
-        this.movieDao = movieDao;
+        this.movieRepo = movieRepo;
+        this.roleDetailService = roleDetailService;
     }
 
     public List<Movie> getAllMovies(){
         return movieRepo.getAll();
     }
 
-    public Movie getMovieById(int movieId){
-        return movieRepo.findOneById(movieId);
+    public List<Movie> getAllMoviesByCinemaId(int cinemaId){
+        return movieRepo.getAllMoviesByCinemaId(cinemaId);
+    }
+
+    public MovieDetail getMovieDetail(int movieId){
+        MovieDetail movieDetail = new MovieDetail();
+
+        Movie movie = movieRepo.findOneById(movieId);
+        Detail detail = detailService.getDetailsByMovieId(movieId);
+        List<RoleDetail> roleDetails = roleDetailService.
+                getRoleDetailByDetailId(detail.getDetailId());
+        List<Genre> genres = genreService.getGenres(movieId);
+
+        movieDetail.setMovie(movie);
+        movieDetail.setDetail(detail);
+        movieDetail.setGenres(genres);
+        movieDetail.setRoleDetails(roleDetails);
+        return movieDetail;
     }
 
     public List<MoviePoster> getMoviePosters(){
@@ -44,12 +59,12 @@ public class MovieService {
     }
 
     public List<MoviePoster> getMoviesToBeSoonReleased(){
-        List<Movie> movies = movieDao.getMovieToBeSoonReleased();
+        List<Movie> movies = movieRepo.getMovieToBeSoonReleased();
         return getMoviePosters(movies);
     }
 
     public List<MoviePoster> getKidsMovies(){
-        List<Movie> movies = movieDao.getKidsMovies();
+        List<Movie> movies = movieRepo.getKidsMovies();
         return getMoviePosters(movies);
     }
 

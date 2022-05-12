@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class MovieGenreDaoImpl implements CrudRepository<MovieGenre>, GenreDao {
+public class MovieGenreDaoImpl implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
     private static final String getAllMovieGenres = "SELECT * FROM movie_genre";
     private static final String getAllGenres = "SELECT g.genre_id, g.genre_type " +
@@ -21,25 +21,6 @@ public class MovieGenreDaoImpl implements CrudRepository<MovieGenre>, GenreDao {
             "AND m.movie_id=?";
     public MovieGenreDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-    @Override
-    public List<MovieGenre> getAll() {
-        return jdbcTemplate.query(getAllMovieGenres, new BeanPropertyRowMapper<>(MovieGenre.class));
-    }
-
-    @Override
-    public MovieGenre findOneById(int id) {
-        return null;
-    }
-
-    @Override
-    public void save(MovieGenre entity) {
-
-    }
-
-    @Override
-    public void delete(int id) {
-
     }
 
     @Override

@@ -3,42 +3,42 @@ package org.billboard.model;
 import java.io.Serializable;
 
 public class TicketType implements Serializable {
-    private int adultTicket;
-    private int childTicket;
-    private int studentTicket;
+    private Integer adultTicket;
+    private Integer childTicket;
+    private Integer studentTicket;
 
     public TicketType() {
     }
 
-    public TicketType(int adultTicket,
-                      int childTicket,
-                      int studentTicket) {
+    public TicketType(Integer adultTicket,
+                      Integer childTicket,
+                      Integer studentTicket) {
         this.adultTicket = adultTicket;
         this.childTicket = childTicket;
         this.studentTicket = studentTicket;
     }
 
-    public int getAdultTicket() {
+    public Integer getAdultTicket() {
         return adultTicket;
     }
 
-    public void setAdultTicket(int adultTicket) {
+    public void setAdultTicket(Integer adultTicket) {
         this.adultTicket = adultTicket;
     }
 
-    public int getChildTicket() {
+    public Integer getChildTicket() {
         return childTicket;
     }
 
-    public void setChildTicket(int childTicket) {
+    public void setChildTicket(Integer childTicket) {
         this.childTicket = childTicket;
     }
 
-    public int getStudentTicket() {
+    public Integer getStudentTicket() {
         return studentTicket;
     }
 
-    public void setStudentTicket(int studentTicket) {
+    public void setStudentTicket(Integer studentTicket) {
         this.studentTicket = studentTicket;
     }
 }
