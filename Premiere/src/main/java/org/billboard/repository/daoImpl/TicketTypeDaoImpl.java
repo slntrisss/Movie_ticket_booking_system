@@ -17,6 +17,7 @@ public class TicketTypeDaoImpl implements TicketTypeDao {
     private static final String saveTickets = "INSERT INTO ticket_type(adult_ticket, " +
             "child_ticket, student_ticket, schedule_id) " +
             "values(?,?,?,?)";
+    private static final String delete = "DELETE FROM ticket_type WHERE schedule_id=?";
 
     public TicketTypeDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,5 +34,10 @@ public class TicketTypeDaoImpl implements TicketTypeDao {
         jdbcTemplate.update(saveTickets, ticketType.getAdultTicket(),
                 ticketType.getChildTicket(), ticketType.getStudentTicket(),
                 scheduleId);
+    }
+
+    @Override
+    public void delete(int id) {
+        jdbcTemplate.update(delete, id);
     }
 }

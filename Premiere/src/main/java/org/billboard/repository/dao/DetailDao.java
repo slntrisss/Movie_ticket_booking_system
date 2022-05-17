@@ -14,6 +14,7 @@ public interface DetailDao {
     void update(Detail detail);
     String getLanguage(int movieId);
     Integer getLastId();
+    Integer getDetailIdByMovie(int movieId);
     Integer getDuration(int movieId);
 
 }

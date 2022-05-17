@@ -46,6 +46,9 @@ public class MovieDaoImpl implements MovieDao<Movie> {
     private static final String availableMovies = "SELECT movie_id, movie_name FROM movie";
     private static final String updateMovie = "UPDATE movie SET movie_name=?, " +
             "original_name=?, image_file=? WHERE movie_id=?";
+    private static final String save = "INSERT INTO movie(movie_name, original_name, " +
+            "image_file) VALUES(?, ?, ?)";
+    private static final String delete = "DELETE FROM movie WHERE movie_id=?";
     @Autowired
     public MovieDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -53,22 +56,25 @@ public class MovieDaoImpl implements MovieDao<Movie> {
 
     @Override
     public List<Movie> getAll() {
-        return jdbcTemplate.query(getAllMovies, new BeanPropertyRowMapper<>(Movie.class));
+        return jdbcTemplate.query(getAllMovies,
+                new BeanPropertyRowMapper<>(Movie.class));
     }
 
     @Override
     public Movie findOneById(int id) {
-        return jdbcTemplate.queryForObject(getMovieById, new BeanPropertyRowMapper<>(Movie.class), id);
+        return jdbcTemplate.queryForObject(getMovieById,
+                new BeanPropertyRowMapper<>(Movie.class), id);
     }
 
     @Override
-    public void save(Movie entity) {
-
+    public void save(Movie movie) {
+        jdbcTemplate.update(save, movie.getMovieName(), movie.getOriginalName(),
+                movie.getImageFile());
     }
 
     @Override
     public void delete(int id) {
-
+        jdbcTemplate.update(delete, id);
     }
 
     @Override

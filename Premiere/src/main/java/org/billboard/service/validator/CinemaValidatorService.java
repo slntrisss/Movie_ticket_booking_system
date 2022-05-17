@@ -20,6 +20,9 @@ public class CinemaValidatorService {
         if(cinemaRepo.exists(cinemaName.toString()))
             throw new InvalidCinemaException("Given cinema name \"" +
                     cinema.getCinemaName() + "\" already exists");
+        return phoneVerification(cinema);
+    }
+    public boolean phoneVerification(Cinema cinema) throws InvalidCinemaException {
         PhoneNumberVerification verification;
         boolean accepted = false;
         if(cinema.getPhone().contains("+")){
@@ -34,13 +37,10 @@ public class CinemaValidatorService {
             verification = new DashValidator(new PhoneNumberVerificationImpl());
             accepted = verification.matches(cinema.getPhone());
         }
-
-
         if(!accepted)
             throw new InvalidCinemaException("Given phone number format \"" +
                     cinema.getPhone() + "\" is invalid");
 
         return true;
     }
-
 }

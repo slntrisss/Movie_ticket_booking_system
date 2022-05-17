@@ -6,10 +6,7 @@ import org.billboard.model.Detail;
 import org.billboard.model.Genre;
 import org.billboard.model.Movie;
 import org.billboard.model.RoleDetail;
-import org.billboard.service.dao.DetailService;
-import org.billboard.service.dao.MovieGenreService;
-import org.billboard.service.dao.MovieService;
-import org.billboard.service.dao.RoleDetailService;
+import org.billboard.service.dao.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,15 +17,18 @@ public class MovieDetailService {
     private final DetailService detailService;
     private final RoleDetailService roleDetailService;
     private final MovieGenreService genreService;
+    private final ScheduleService scheduleService;
 
     public MovieDetailService(MovieService movieService,
                               DetailService detailService,
                               RoleDetailService roleDetailService,
-                              MovieGenreService genreService) {
+                              MovieGenreService genreService,
+                              ScheduleService scheduleService) {
         this.movieService = movieService;
         this.detailService = detailService;
         this.roleDetailService = roleDetailService;
         this.genreService = genreService;
+        this.scheduleService = scheduleService;
     }
 
     public MovieDetail getMovieDetail(int movieId){
@@ -62,7 +62,7 @@ public class MovieDetailService {
         genreService.save(genres, movieId);
     }
 
-    public void update(MovieDetail movieDetail) throws InvalidMovieException{
+    public void update(MovieDetail movieDetail){
         Movie movie = movieDetail.getMovie();
         movieService.update(movie);
 
@@ -77,5 +77,12 @@ public class MovieDetailService {
 
         List<Genre> genres = movieDetail.getGenres();
         genreService.save(genres, movie.getMovieId());
+    }
+
+    public void delete(int id){
+        movieService.addEventListener(genreService);
+        movieService.addEventListener(scheduleService);
+        movieService.addEventListener(detailService);
+        movieService.delete(id);
     }
 }

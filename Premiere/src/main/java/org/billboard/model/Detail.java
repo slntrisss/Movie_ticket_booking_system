@@ -7,12 +7,12 @@ public class Detail implements Serializable {
     private int detailId;
     private String country;
     private String language;
-    private String duration;
+    private int duration;
     private Date releaseDate;
     private String formattedDate;
     private String ageRating;
-    private double rating;
-    private int numberOfVotes;
+    private Double rating;
+    private Integer numberOfVotes;
     private String description;
 
     public Detail() {
@@ -21,11 +21,11 @@ public class Detail implements Serializable {
     public Detail(int detailId,
                   String country,
                   String language,
-                  String duration, Date releaseDate,
+                  int duration, Date releaseDate,
                   String formattedDate,
                   String ageRating,
-                  double rating,
-                  int numberOfVotes,
+                  Double rating,
+                  Integer numberOfVotes,
                   String description) {
         this.detailId = detailId;
         this.country = country;
@@ -87,19 +87,19 @@ public class Detail implements Serializable {
         this.ageRating = ageRating;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
-    public int getNumberOfVotes() {
+    public Integer getNumberOfVotes() {
         return numberOfVotes;
     }
 
-    public void setNumberOfVotes(int numberOfVotes) {
+    public void setNumberOfVotes(Integer numberOfVotes) {
         this.numberOfVotes = numberOfVotes;
     }
 
@@ -111,11 +111,11 @@ public class Detail implements Serializable {
         this.description = description;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 }

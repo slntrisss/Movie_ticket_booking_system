@@ -71,4 +71,10 @@ public class AdminScheduleController {
         scheduleService.saveSchedules(schedule, cinemaHallId, movieId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/delete/{scheduleId}")
+    public ResponseEntity<?> delete(@PathVariable("scheduleId") int scheduleId){
+        scheduleService.delete(scheduleId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

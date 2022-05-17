@@ -26,7 +26,6 @@ public class AdminCinemaController {
     }
 
     @PostMapping("/addCinema")
-    @ExceptionHandler(InvalidCinemaException.class)
     public ResponseEntity<?> addCinema(@RequestBody Cinema cinema){
         try {
             cinemaService.save(cinema);
@@ -38,9 +37,16 @@ public class AdminCinemaController {
     }
 
     @GetMapping("/availableCinemas")
-    public ResponseEntity<List<Cinema>> getAllCinemas(){
-        List<Cinema> cinemas = cinemaService.getCinemaNames();
+    public ResponseEntity<List<Cinema>> getAllCinemas(@RequestParam(value = "limit",
+            required = false) String limit){
+        List<Cinema> cinemas = cinemaService.getCinemaPosters(limit);
         return new ResponseEntity<>(cinemas, HttpStatus.OK);
+    }
+
+    @GetMapping("detail/{cinemaId}")
+    public ResponseEntity<Cinema> getCinemaDetail(@PathVariable("cinemaId")int cinemaId){
+        Cinema cinema = cinemaService.findOneById(cinemaId);
+        return new ResponseEntity<>(cinema, HttpStatus.OK);
     }
 
     @PostMapping("/addHalls")
@@ -51,7 +57,6 @@ public class AdminCinemaController {
     }
 
     @PutMapping("/updateCinema")
-    @ExceptionHandler(InvalidCinemaException.class)
     public ResponseEntity<?> updateCinema(@RequestBody Cinema cinema){
         try {
             cinemaService.update(cinema);
@@ -68,8 +73,13 @@ public class AdminCinemaController {
         return new ResponseEntity<>(halls, HttpStatus.OK);
     }
 
-    @PutMapping("/updateHalls")
-    @ExceptionHandler(InvalidHallException.class)
+    @GetMapping("hall/detail/{hallId}")
+    public ResponseEntity<CinemaHall> getHall(@PathVariable("hallId") int hallId){
+        CinemaHall hall = hallService.getHallDetail(hallId);
+        return new ResponseEntity<>(hall, HttpStatus.OK);
+    }
+
+    @PutMapping("/updateHall")
     public ResponseEntity<?> updateHall(@RequestBody CinemaHall cinemaHall,
                                         @RequestParam("cinemaId") int cinemaId){
         try {
@@ -78,6 +88,19 @@ public class AdminCinemaController {
             Error error = new Error(HttpStatus.NOT_MODIFIED, e.getMessage());
             return new ResponseEntity<>(error, HttpStatus.NOT_MODIFIED);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-cinema/{cinemaId}")
+    public ResponseEntity<?> deleteCinema(@PathVariable("cinemaId")int cinemaId){
+        cinemaService.addEventListeners(hallService);
+        cinemaService.delete(cinemaId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-hall/{hallId}")
+    public ResponseEntity<?> deleteHall(@PathVariable("hallId") int hallId){
+        hallService.delete(hallId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -21,4 +21,8 @@ public class TicketTypeService {
     public void save(TicketType ticketType, int scheduleId){
         ticketsRepo.save(ticketType, scheduleId);
     }
+
+    public void delete(int id){
+        ticketsRepo.delete(id);
+    }
 }

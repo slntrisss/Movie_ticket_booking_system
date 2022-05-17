@@ -30,6 +30,8 @@ public class DetailDaoImpl implements DetailDao {
     private static final String updateDetail = "UPDATE detail SET country=?, " +
             "language=?, duration=?, release_date=?, age_rating=?, rating=?, " +
             "number_of_votes=?, description=? WHERE detail_id=?";
+    private static final String deleteById = "DELETE FROM detail WHERE movie_id=?";
+    private static final String getId = "SELECT detail_id FROM detail WHERE movie_id=?";
 
     public DetailDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -53,7 +55,7 @@ public class DetailDaoImpl implements DetailDao {
 
     @Override
     public void deleteById(int id) {
-
+        jdbcTemplate.update(deleteById, id);
     }
 
     @Override
@@ -81,6 +83,11 @@ public class DetailDaoImpl implements DetailDao {
     @Override
     public Integer getLastId() {
         return jdbcTemplate.queryForObject(lastId, Integer.class);
+    }
+
+    @Override
+    public Integer getDetailIdByMovie(int movieId) {
+        return jdbcTemplate.queryForObject(getId, Integer.class, movieId);
     }
 
     @Override

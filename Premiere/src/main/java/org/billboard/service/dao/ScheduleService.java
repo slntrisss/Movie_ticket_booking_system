@@ -6,6 +6,7 @@ import org.billboard.filter.ScheduleFilter;
 import org.billboard.model.Schedule;
 import org.billboard.model.TicketType;
 import org.billboard.repository.dao.ScheduleDao;
+import org.billboard.service.trigger.DeleteEventListener;
 import org.joda.time.Instant;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -16,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Service
-public class ScheduleService {
+public class ScheduleService implements DeleteEventListener{
     private final ScheduleDao scheduleRepo;
     private final DetailService detailService;
     private final TicketTypeService ticketTypeService;
@@ -134,5 +135,23 @@ public class ScheduleService {
                     new AvailableInterval(start.toString(), end.toString());
             list.add(availableInterval);
         }
+    }
+
+    @Override
+    public void notifyDelete(int id) {
+        ticketTypeService.delete(id);
+        scheduleRepo.deleteByMovieId(id);
+    }
+
+    public void delete(int id){
+        ticketTypeService.delete(id);
+        scheduleRepo.delete(id);
+    }
+
+    public void deleteByHallId(int hallId){
+        List<Integer> schedules = scheduleRepo.getSchedulesByHallId(hallId);
+        for(Integer e: schedules)
+            ticketTypeService.delete(e);
+        scheduleRepo.deleteByHallId(hallId);
     }
 }

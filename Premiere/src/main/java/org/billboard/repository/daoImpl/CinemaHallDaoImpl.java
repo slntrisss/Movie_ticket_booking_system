@@ -35,6 +35,7 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
 
     private static final String saveHalls = "INSERT INTO cinema_hall(hall_name, number_of_rows, " +
             "number_of_cols, cinema_id) VALUES (?, ?, ?, ?)";
+    private static final String getHallDetail = "SELECT * FROM cinema_hall WHERE cinema_hall_id=?";
 
     private static final String getHallsByCinemaId = "SELECT hall_name FROM cinema_hall " +
             "JOIN cinema c " +
@@ -44,8 +45,15 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
     private static final String getAvailableHallsByCinema = "SELECT cinema_hall_id, hall_name " +
             "FROM cinema_hall WHERE cinema_id=?";
     private static final String updateHall = "UPDATE cinema_hall SET hall_name=?," +
-            "number_of_halls=?, number_of_rows=?, number_of_cols=? WHERE " +
+            " number_of_rows=?, number_of_cols=? WHERE " +
             "cinema_hall_id=? and cinema_id=?";
+    private static final String deleteHalls = "DELETE FROM cinema_hall WHERE cinema_id=?";
+    private static final String getSchedules = "select schedule_id from schedule " +
+            "join cinema_hall ch " +
+            "    on ch.cinema_hall_id = schedule.cinema_hall_id " +
+            "join cinema c " +
+            "    on c.cinema_id = ch.cinema_id " +
+            "where c.cinema_id=?";
 
     public CinemaHallDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -86,8 +94,24 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
     }
 
     @Override
+    public List<Integer> getSchedules(int id) {
+        return jdbcTemplate.queryForList(getSchedules, Integer.class, id);
+    }
+
+    @Override
+    public CinemaHall getHallDetail(int hallId) {
+        return jdbcTemplate.queryForObject(getHallDetail,
+                new BeanPropertyRowMapper<>(CinemaHall.class), hallId);
+    }
+
+    @Override
     public void update(CinemaHall hall, int cinemaId) {
         jdbcTemplate.update(updateHall, hall.getHallName(), hall.getNumberOfRows(),
                 hall.getNumberOfCols(), hall.getCinemaHallId(), cinemaId);
+    }
+
+    @Override
+    public void delete(int id) {
+        jdbcTemplate.update(deleteHalls, id);
     }
 }

@@ -2,6 +2,7 @@ package org.billboard.repository.daoImpl;
 
 import org.billboard.model.Genre;
 import org.billboard.repository.dao.GenreDao;
+import org.billboard.service.trigger.DeleteEventListener;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class MovieGenreDaoImpl implements GenreDao {
+public class MovieGenreDaoImpl implements GenreDao, DeleteEventListener {
     private final JdbcTemplate jdbcTemplate;
     private static final String getAllMovieGenres = "SELECT * FROM movie_genre";
     private static final String getAllGenres = "SELECT g.genre_id, g.genre_type " +
@@ -37,7 +38,8 @@ public class MovieGenreDaoImpl implements GenreDao {
         jdbcTemplate.batchUpdate(saveGenresByMovieId, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setInt(movieId, genres.get(i).getGenreId());
+                ps.setInt(1, movieId);
+                ps.setInt(2, genres.get(i).getGenreId());
             }
 
             @Override
@@ -50,5 +52,10 @@ public class MovieGenreDaoImpl implements GenreDao {
     @Override
     public void deleteById(int id) {
         jdbcTemplate.update(deleteById, id);
+    }
+
+    @Override
+    public void notifyDelete(int id) {
+        deleteById(id);
     }
 }

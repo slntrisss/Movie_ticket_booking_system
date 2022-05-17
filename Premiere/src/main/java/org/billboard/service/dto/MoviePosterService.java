@@ -43,6 +43,11 @@ public class MoviePosterService {
         return getMoviePosters(movies);
     }
 
+    public List<MoviePoster> getAllMovies(){
+        List<Movie> movies = movieService.getAllMovies();
+        return getMoviePosters(movies);
+    }
+
     private List<MoviePoster> getMoviePosters(List<Movie> movies){
         List<MoviePoster> moviePosters = new LinkedList<>();
         for(Movie movie: movies){

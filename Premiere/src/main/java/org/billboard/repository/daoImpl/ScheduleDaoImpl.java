@@ -53,6 +53,11 @@ public class ScheduleDaoImpl implements ScheduleDao {
     private static final String saveSchedules =
             "insert into schedule(schedule_date, start_time, cinema_hall_id, movie_id) " +
                     "values(?,?,?,?)";
+    private static final String delete = "DELETE FROM schedule WHERE schedule_id=?";
+    private static final String deleteByMovieId = "DELETE FROM schedule WHERE movie_id=?";
+    private static final String getSchedulesByHallId = "SELECT schedule_id " +
+            "FROM schedule WHERE cinema_hall_id=?";
+    private static final String deleteByHallId = "DELETE FROM schedule WHERE cinema_hall_id=?";
 
     public ScheduleDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -84,6 +89,12 @@ public class ScheduleDaoImpl implements ScheduleDao {
     }
 
     @Override
+    public List<Integer> getSchedulesByHallId(int hallId) {
+        return jdbcTemplate.queryForList(getSchedulesByHallId, Integer.class,
+                hallId);
+    }
+
+    @Override
     public void save(final List<Schedule> schedules, final int cinemaHallId, final int movieId) {
         jdbcTemplate.batchUpdate(saveSchedules, new BatchPreparedStatementSetter() {
             @Override
@@ -99,5 +110,20 @@ public class ScheduleDaoImpl implements ScheduleDao {
                 return schedules.size();
             }
         });
+    }
+
+    @Override
+    public void delete(int id) {
+        jdbcTemplate.update(delete, id);
+    }
+
+    @Override
+    public void deleteByMovieId(int movieId) {
+        jdbcTemplate.update(deleteByMovieId, movieId);
+    }
+
+    @Override
+    public void deleteByHallId(int hallId) {
+        jdbcTemplate.update(deleteByHallId, hallId);
     }
 }

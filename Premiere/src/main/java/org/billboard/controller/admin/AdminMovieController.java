@@ -1,26 +1,29 @@
 package org.billboard.controller.admin;
 
+import org.billboard.dto.home.MoviePoster;
 import org.billboard.dto.movie.MovieDetail;
 import org.billboard.error.Error;
 import org.billboard.error.exception.InvalidHallException;
 import org.billboard.error.exception.InvalidMovieException;
-import org.billboard.service.dao.MovieService;
 import org.billboard.service.dto.MovieDetailService;
+import org.billboard.service.dto.MoviePosterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/movie")
 public class AdminMovieController {
-    private final MovieService movieService;
+    private final MoviePosterService posterService;
     private final MovieDetailService movieDetailService;
 
     @Autowired
-    public AdminMovieController(MovieService movieService,
+    public AdminMovieController(MoviePosterService posterService,
                                 MovieDetailService movieDetailService) {
-        this.movieService = movieService;
+        this.posterService = posterService;
         this.movieDetailService = movieDetailService;
     }
 
@@ -39,6 +42,25 @@ public class AdminMovieController {
     @PutMapping("/update")
     @ExceptionHandler(InvalidHallException.class)
     public ResponseEntity<?> update(@RequestBody MovieDetail movieDetail){
+        movieDetailService.update(movieDetail);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{movieId}")
+    public ResponseEntity<?> delete(@PathVariable("movieId") int movieId){
+        movieDetailService.delete(movieId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/allMovies")
+    public ResponseEntity<List<MoviePoster>> getAll(){
+        List<MoviePoster> posters = posterService.getAllMovies();
+        return new ResponseEntity<>(posters, HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<MovieDetail> getMovieDetail(@PathVariable("id") int movieId){
+        MovieDetail movieDetail = movieDetailService.getMovieDetail(movieId);
+        return new ResponseEntity<>(movieDetail, HttpStatus.OK);
     }
 }

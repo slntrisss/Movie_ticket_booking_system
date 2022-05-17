@@ -33,12 +33,13 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String exists = "SELECT EXISTS(SELECT cinema_name FROM cinema WHERE " +
             "cinema_name LIKE ?)";
-    private static final String getCinemaNames = "SELECT cinema_name FROM cinema";
+    private static final String getCinemaNames = "SELECT cinema_id, cinema_name FROM cinema";
     private static final String updateCinema =
             "UPDATE cinema SET cinema_name=?, address=?, " +
             "                  phone=?, info=?, start_of_work=?, " +
             "                  end_of_work=?, image_file=? " +
             "WHERE cinema_id=?";
+    private static final String deleteCinema = "DELETE FROM cinema WHERE cinema_id=?";
 
     @Autowired
     public CinemaDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -64,7 +65,7 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
 
     @Override
     public void delete(int id) {
-
+        jdbcTemplate.update(deleteCinema, id);
     }
 
     @Override

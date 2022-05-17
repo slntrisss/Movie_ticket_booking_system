@@ -1,21 +1,23 @@
 package org.billboard.service.dao;
 
 import org.billboard.error.exception.InvalidHallException;
+import org.billboard.model.Cinema;
 import org.billboard.model.CinemaHall;
 import org.billboard.repository.dao.CinemaHallDao;
+import org.billboard.service.trigger.DeleteEventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
-public class CinemaHallService {
+public class CinemaHallService implements DeleteEventListener {
     private final CinemaHallDao hallRepo;
+    private final ScheduleService scheduleService;
 
-    public CinemaHallService(CinemaHallDao hallRepo) {
+    public CinemaHallService(CinemaHallDao hallRepo,
+                             ScheduleService scheduleService) {
         this.hallRepo = hallRepo;
+        this.scheduleService = scheduleService;
     }
 
     public String getHallByScheduleId(int scheduleId){
@@ -26,17 +28,24 @@ public class CinemaHallService {
         return hallRepo.getHalls(cinemaId);
     }
 
+    public CinemaHall getHallDetail(int hallId){
+        return hallRepo.getHallDetail(hallId);
+    }
+
     public void save(List<CinemaHall> cinemaHalls, int cinemaId){
         List<CinemaHall> nonDuplicateList = removeDuplicates(cinemaHalls, cinemaId);
         hallRepo.save(nonDuplicateList, cinemaId);
     }
 
     public void update(CinemaHall cinemaHall, int cinemaId) throws InvalidHallException {
-        boolean valid = isValid(cinemaHall, cinemaId);
-        if(!valid)
-            throw new InvalidHallException("Given hall is already exists");
         hallRepo.update(cinemaHall, cinemaId);
     }
+
+    public void delete(int hallId){
+        scheduleService.deleteByHallId(hallId);
+        hallRepo.delete(hallId);
+    }
+
 
     public List<CinemaHall> getAvailableHalls(int cinemaId){
         return hallRepo.getAvailableHallsByCinema(cinemaId);
@@ -54,9 +63,11 @@ public class CinemaHallService {
         return nonDuplicateList;
     }
 
-    private boolean isValid(CinemaHall hall, int cinemaId){
-        List<String> availableHalls = getHallsByCinemaId(cinemaId);
-        Set<String> set = new HashSet<>(availableHalls);
-        return !set.contains(hall.getHallName());
+    @Override
+    public void notifyDelete(int id) {
+        List<Integer> list = hallRepo.getSchedules(id);
+        for(Integer e: list)
+            scheduleService.notifyDelete(e);
+        hallRepo.delete(id);
     }
 }
