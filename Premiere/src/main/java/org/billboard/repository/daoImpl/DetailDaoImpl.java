@@ -20,6 +20,16 @@ public class DetailDaoImpl implements DetailDao {
             "FROM detail d, movie m " +
             "WHERE m.movie_id=d.movie_id " +
             "AND m.movie_id=?";
+    private static final String saveDetailByMovieId =
+            "insert into detail(country, language, duration, release_date, age_rating, " +
+                    "rating, number_of_votes, description, movie_id) " +
+                    "values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String lastId = "SELECT max(detail_id) FROM detail";
+
+    private static final String getDuration = "SELECT duration FROM detail WHERE movie_id=?";
+    private static final String updateDetail = "UPDATE detail SET country=?, " +
+            "language=?, duration=?, release_date=?, age_rating=?, rating=?, " +
+            "number_of_votes=?, description=? WHERE detail_id=?";
 
     public DetailDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -47,12 +57,34 @@ public class DetailDaoImpl implements DetailDao {
     }
 
     @Override
-    public void save(Detail entity, int id) {
+    public void save(Detail detail, int id) {
+        jdbcTemplate.update(saveDetailByMovieId, detail.getCountry(), detail.getLanguage(),
+                detail.getDuration(), detail.getReleaseDate(), detail.getAgeRating(),
+                detail.getRating(), detail.getNumberOfVotes(), detail.getDescription(),
+                id);
+    }
 
+    @Override
+    public void update(Detail detail) {
+        jdbcTemplate.update(updateDetail, detail.getCountry(),
+                detail.getLanguage(), detail.getDuration(),
+                detail.getReleaseDate(), detail.getAgeRating(),
+                detail.getRating(), detail.getNumberOfVotes(),
+                detail.getDescription(), detail.getDetailId());
     }
 
     @Override
     public String getLanguage(int movieId) {
         return jdbcTemplate.queryForObject(getAllLanguages, String.class, movieId);
+    }
+
+    @Override
+    public Integer getLastId() {
+        return jdbcTemplate.queryForObject(lastId, Integer.class);
+    }
+
+    @Override
+    public Integer getDuration(int movieId) {
+        return jdbcTemplate.queryForObject(getDuration, Integer.class, movieId);
     }
 }

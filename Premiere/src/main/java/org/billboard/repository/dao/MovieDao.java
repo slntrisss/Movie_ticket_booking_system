@@ -9,4 +9,7 @@ public interface MovieDao<T extends Serializable> extends CrudRepository<T> {
     List<Movie> getMovieToBeSoonReleased();
     List<Movie> getKidsMovies();
     List<Movie> getAllMoviesByCinemaId(int cinemaId);
+    boolean exists(Movie movie);
+    Integer getLastId();
+    List<Movie> getAvailableCinemas();
 }

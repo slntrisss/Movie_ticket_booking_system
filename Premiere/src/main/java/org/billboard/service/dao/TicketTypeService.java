@@ -17,4 +17,8 @@ public class TicketTypeService {
     public TicketType getTicket(int scheduleId){
         return ticketsRepo.getTicket(scheduleId);
     }
+
+    public void save(TicketType ticketType, int scheduleId){
+        ticketsRepo.save(ticketType, scheduleId);
+    }
 }

@@ -3,6 +3,7 @@ package org.billboard.controller.movie;
 import org.billboard.dto.movie.MovieDetail;
 import org.billboard.dto.scheduleSort.CinemaMovieSchedule;
 import org.billboard.service.dao.MovieService;
+import org.billboard.service.dto.MovieDetailService;
 import org.billboard.service.dto.ScheduleOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,18 +19,21 @@ import java.util.List;
 @RequestMapping("/movie")
 public class MovieController {
     private final MovieService movieService;
+    private final MovieDetailService movieDetailService;
     private final ScheduleOrderService sortingService;
 
     @Autowired
     public MovieController(MovieService movieService,
+                           MovieDetailService movieDetailService,
                            ScheduleOrderService sortingService) {
         this.movieService = movieService;
+        this.movieDetailService = movieDetailService;
         this.sortingService = sortingService;
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<MovieDetail> getMovieDetails(@PathVariable("id") int movieId){
-        MovieDetail movieDetail = movieService.getMovieDetail(movieId);
+        MovieDetail movieDetail = movieDetailService.getMovieDetail(movieId);
         return new ResponseEntity<>(movieDetail, HttpStatus.OK);
     }
 

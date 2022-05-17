@@ -8,6 +8,6 @@ import java.util.List;
 public interface RoleDetailDao {
     List<RoleDetail> getAllRoleDetailsByMovieId(int movieId);
     List<RoleDetail> getAll();
-    void save(RoleDetail roleDetail, int id);
+    void save(List<RoleDetail> roleDetails, int id);
     void deleteById(int id);
 }

@@ -4,6 +4,7 @@ import org.billboard.dto.home.MoviePoster;
 import org.billboard.model.Cinema;
 import org.billboard.service.dao.CinemaService;
 import org.billboard.service.dao.MovieService;
+import org.billboard.service.dto.MoviePosterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +18,19 @@ import java.util.List;
 public class HomeController {
     private final CinemaService cinemaService;
     private final MovieService movieService;
+    private final MoviePosterService posterService;
 
     public HomeController(CinemaService cinemaService,
-                          MovieService movieService) {
+                          MovieService movieService,
+                          MoviePosterService posterService) {
         this.cinemaService = cinemaService;
         this.movieService = movieService;
+        this.posterService = posterService;
     }
 
     @GetMapping("/movie-list")
     public ResponseEntity<List<MoviePoster>> getMoviePosters(){
-        List<MoviePoster> moviePosters = movieService.getMoviePosters();
+        List<MoviePoster> moviePosters = posterService.getMoviePosters();
         return new ResponseEntity<>(moviePosters, HttpStatus.OK);
     }
 
@@ -39,13 +43,13 @@ public class HomeController {
 
     @GetMapping("/soon")
     public ResponseEntity<List<MoviePoster>> getMoviesToBeSoonReleased(){
-        List<MoviePoster> moviePosters = movieService.getMoviesToBeSoonReleased();
+        List<MoviePoster> moviePosters = posterService.getMoviesToBeSoonReleased();
         return new ResponseEntity<>(moviePosters, HttpStatus.OK);
     }
 
     @GetMapping("/forKids")
     public ResponseEntity<List<MoviePoster>> getKidsMovies(){
-        List<MoviePoster> moviePosters = movieService.getKidsMovies();
+        List<MoviePoster> moviePosters = posterService.getKidsMovies();
         return new ResponseEntity<>(moviePosters, HttpStatus.OK);
     }
 }

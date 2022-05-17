@@ -36,6 +36,16 @@ public class MovieDaoImpl implements MovieDao<Movie> {
             "JOIN cinema c " +
             "    ON c.cinema_id = ch.cinema_id " +
             "WHERE c.cinema_id=?";
+    private static final String exists = "select exists( " +
+            "    select * from movie " +
+            "    where movie_name like ? " +
+            "    OR original_name like ? " +
+            "    OR image_file like ? " +
+            "    )";
+    private static final String lastId = "SELECT max(movie_id) FROM movie";
+    private static final String availableMovies = "SELECT movie_id, movie_name FROM movie";
+    private static final String updateMovie = "UPDATE movie SET movie_name=?, " +
+            "original_name=?, image_file=? WHERE movie_id=?";
     @Autowired
     public MovieDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -62,18 +72,43 @@ public class MovieDaoImpl implements MovieDao<Movie> {
     }
 
     @Override
+    public void update(Movie movie) {
+        jdbcTemplate.update(updateMovie, movie.getMovieName(),
+                movie.getOriginalName(), movie.getImageFile(),
+                movie.getMovieId());
+    }
+
+    @Override
     public List<Movie> getMovieToBeSoonReleased() {
-        return jdbcTemplate.query(getMoviesToBeSoonReleased, new BeanPropertyRowMapper<>(Movie.class));
+        return jdbcTemplate.query(getMoviesToBeSoonReleased,
+                new BeanPropertyRowMapper<>(Movie.class));
     }
 
     @Override
     public List<Movie> getKidsMovies() {
-        return jdbcTemplate.query(getKidsMovies, new BeanPropertyRowMapper<>(Movie.class));
+        return jdbcTemplate.query(getKidsMovies,
+                new BeanPropertyRowMapper<>(Movie.class));
     }
 
     @Override
     public List<Movie> getAllMoviesByCinemaId(int cinemaId) {
         return jdbcTemplate.query(getAllMoviesByCinemaId,
                 new BeanPropertyRowMapper<>(Movie.class), cinemaId);
+    }
+
+    public boolean exists(Movie movie){
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(exists, Boolean.class,
+                movie.getMovieName(), movie.getOriginalName(), movie.getImageFile()));
+    }
+
+    @Override
+    public Integer getLastId() {
+        return jdbcTemplate.queryForObject(lastId, Integer.class);
+    }
+
+    @Override
+    public List<Movie> getAvailableCinemas() {
+        return jdbcTemplate.query(availableMovies,
+                new BeanPropertyRowMapper<>(Movie.class));
     }
 }

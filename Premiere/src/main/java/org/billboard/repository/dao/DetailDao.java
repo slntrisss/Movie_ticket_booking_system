@@ -11,5 +11,9 @@ public interface DetailDao {
     Detail getById(int id);
     void deleteById(int id);
     void save(Detail detail, int id);
+    void update(Detail detail);
     String getLanguage(int movieId);
+    Integer getLastId();
+    Integer getDuration(int movieId);
+
 }

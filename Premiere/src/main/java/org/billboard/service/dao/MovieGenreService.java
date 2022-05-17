@@ -21,4 +21,12 @@ public class MovieGenreService {
     public List<Genre> getGenres(int movieId){
         return genreDao.getGenreList(movieId);
     }
+
+    public void save(List<Genre> genres, int movieId){
+        genreDao.save(genres, movieId);
+    }
+
+    public void delete(int id){
+        genreDao.deleteById(id);
+    }
 }

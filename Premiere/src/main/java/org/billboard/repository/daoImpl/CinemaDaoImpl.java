@@ -4,6 +4,7 @@ import org.billboard.model.Cinema;
 import org.billboard.repository.dao.CinemaDao;
 import org.billboard.repository.daoMapper.CinemaDaoMapper;
 import org.billboard.repository.daoMapper.CinemaDetailMapper;
+import org.billboard.repository.daoMapper.CinemaNameMapper;
 import org.billboard.repository.daoMapper.CinemaOrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,6 +33,12 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String exists = "SELECT EXISTS(SELECT cinema_name FROM cinema WHERE " +
             "cinema_name LIKE ?)";
+    private static final String getCinemaNames = "SELECT cinema_name FROM cinema";
+    private static final String updateCinema =
+            "UPDATE cinema SET cinema_name=?, address=?, " +
+            "                  phone=?, info=?, start_of_work=?, " +
+            "                  end_of_work=?, image_file=? " +
+            "WHERE cinema_id=?";
 
     @Autowired
     public CinemaDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -61,6 +68,14 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
     }
 
     @Override
+    public void update(Cinema cinema) {
+        jdbcTemplate.update(updateCinema, cinema.getCinemaName(),
+                cinema.getAddress(), cinema.getPhone(), cinema.getInfo(),
+                cinema.getStartOfWork(), cinema.getEndOfWork(),
+                cinema.getImageFile(), cinema.getCinemaId());
+    }
+
+    @Override
     public List<Cinema> getCinemaPosters(Integer rowCount) {
         return jdbcTemplate.query(getCinemaPosters, new CinemaDaoMapper(), rowCount);
     }
@@ -73,5 +88,10 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
     @Override
     public boolean exists(String cinemaName) {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(exists, Boolean.class, cinemaName));
+    }
+
+    @Override
+    public List<Cinema> getCinemaNames() {
+        return jdbcTemplate.query(getCinemaNames, new CinemaNameMapper());
     }
 }

@@ -7,6 +7,7 @@ public class Detail implements Serializable {
     private int detailId;
     private String country;
     private String language;
+    private String duration;
     private Date releaseDate;
     private String formattedDate;
     private String ageRating;
@@ -20,7 +21,7 @@ public class Detail implements Serializable {
     public Detail(int detailId,
                   String country,
                   String language,
-                  Date releaseDate,
+                  String duration, Date releaseDate,
                   String formattedDate,
                   String ageRating,
                   double rating,
@@ -29,6 +30,7 @@ public class Detail implements Serializable {
         this.detailId = detailId;
         this.country = country;
         this.language = language;
+        this.duration = duration;
         this.releaseDate = releaseDate;
         this.formattedDate = formattedDate;
         this.ageRating = ageRating;
@@ -107,5 +109,13 @@ public class Detail implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

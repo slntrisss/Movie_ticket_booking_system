@@ -1,13 +1,11 @@
 package org.billboard.service.dao;
 
 import org.billboard.model.Detail;
-import org.billboard.repository.dao.CrudRepository;
 import org.billboard.repository.dao.DetailDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class DetailService {
@@ -28,5 +26,21 @@ public class DetailService {
 
     public String getAllLanguages(int movieId){
         return detailRepo.getLanguage(movieId);
+    }
+
+    public void save(Detail detail, int movieId){
+        detailRepo.save(detail, movieId);
+    }
+
+    public void update(Detail detail){
+        detailRepo.update(detail);
+    }
+
+    public Integer getLastId(){
+        return detailRepo.getLastId();
+    }
+
+    public Integer getDuration(int movieId){
+        return detailRepo.getDuration(movieId);
     }
 }

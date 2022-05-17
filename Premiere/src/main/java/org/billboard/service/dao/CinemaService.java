@@ -30,6 +30,10 @@ public class CinemaService {
         }
     }
 
+    public List<Cinema> getCinemaNames(){
+        return cinemaRepo.getCinemaNames();
+    }
+
     public Cinema findOneById(int cinemaId){
         return cinemaRepo.findOneById(cinemaId);
     }
@@ -39,6 +43,12 @@ public class CinemaService {
     }
 
     public void save(Cinema cinema) throws InvalidCinemaException {
+        boolean valid = validatorService.validateCinema(cinema);
+        if(valid)
+            cinemaRepo.save(cinema);
+    }
+
+    public void update(Cinema cinema) throws InvalidCinemaException {
         boolean valid = validatorService.validateCinema(cinema);
         if(valid)
             cinemaRepo.save(cinema);

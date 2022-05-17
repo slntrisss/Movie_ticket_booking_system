@@ -8,4 +8,5 @@ public interface CrudRepository <T extends Serializable>{
     T findOneById(int id);
     void save(T entity);
     void delete(int id);
+    void update(T entity);
 }

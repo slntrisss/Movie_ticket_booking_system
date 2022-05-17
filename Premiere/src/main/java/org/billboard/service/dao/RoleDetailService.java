@@ -19,4 +19,12 @@ public class RoleDetailService {
     public List<RoleDetail> getRoleDetailByDetailId(int detailId){
         return roleDetailRepo.getAllRoleDetailsByMovieId(detailId);
     }
+
+    public void save(List<RoleDetail> roleDetails, int detailId){
+        roleDetailRepo.save(roleDetails, detailId);
+    }
+
+    public void delete(int id){
+        roleDetailRepo.deleteById(id);
+    }
 }
