@@ -11,6 +11,7 @@ public interface ScheduleDao {
     List<Schedule> getSchedulesByFilter(ScheduleFilter filter);
     List<Schedule> getAvailableTimeIntervals(ScheduleFilter filter);
     List<Integer> getSchedulesByHallId(int hallId);
+    Schedule getSchedule(int scheduleId);
     void save(List<Schedule> schedules, int cinemaHallId, int movieId);
     void delete(int id);
     void deleteByMovieId(int movieId);

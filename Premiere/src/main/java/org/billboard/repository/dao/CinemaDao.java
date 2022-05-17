@@ -10,4 +10,5 @@ public interface CinemaDao<T extends Serializable> extends CrudRepository<T>  {
     List<Cinema> getCinemaOrders(int id);
     boolean exists(String cinemaName);
     List<Cinema> getCinemaNames();
+    Cinema getCinemaName(int cinemaId);
 }

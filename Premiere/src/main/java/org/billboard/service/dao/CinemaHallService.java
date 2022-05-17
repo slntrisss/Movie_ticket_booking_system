@@ -32,6 +32,10 @@ public class CinemaHallService implements DeleteEventListener {
         return hallRepo.getHallDetail(hallId);
     }
 
+    public CinemaHall getCinemaHallName(int hallId){
+        return hallRepo.getCinemaHallName(hallId);
+    }
+
     public void save(List<CinemaHall> cinemaHalls, int cinemaId){
         List<CinemaHall> nonDuplicateList = removeDuplicates(cinemaHalls, cinemaId);
         hallRepo.save(nonDuplicateList, cinemaId);

@@ -7,6 +7,7 @@ import java.util.List;
 public interface CinemaHallDao {
     List<String> getHalls(int cinemaId);
     String getHall(int scheduleId);
+    CinemaHall getCinemaHallName(int hallId);
     void save(List<CinemaHall> cinemaHalls, int cinemaId);
     List<CinemaHall> getAvailableHallsByCinema(int cinemaId);
     List<Integer> getSchedules(int id);

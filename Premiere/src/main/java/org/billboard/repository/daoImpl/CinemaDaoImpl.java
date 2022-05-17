@@ -40,6 +40,8 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
             "                  end_of_work=?, image_file=? " +
             "WHERE cinema_id=?";
     private static final String deleteCinema = "DELETE FROM cinema WHERE cinema_id=?";
+    private static final String getCinemaName = "SELECT cinema_id, cinema_name " +
+            "FROM cinema WHERE cinema_id=?";
 
     @Autowired
     public CinemaDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -94,5 +96,11 @@ public class CinemaDaoImpl implements  CinemaDao<Cinema> {
     @Override
     public List<Cinema> getCinemaNames() {
         return jdbcTemplate.query(getCinemaNames, new CinemaNameMapper());
+    }
+
+    @Override
+    public Cinema getCinemaName(int cinemaId) {
+        return jdbcTemplate.queryForObject(getCinemaName,
+                new CinemaNameMapper(), cinemaId);
     }
 }

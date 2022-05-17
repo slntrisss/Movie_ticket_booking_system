@@ -56,6 +56,10 @@ public class ScheduleService implements DeleteEventListener{
         return getAvailableIntervals(schedules, duration);
     }
 
+    public Schedule getSchedule(int scheduleId){
+        return scheduleRepo.getSchedule(scheduleId);
+    }
+
     public void saveSchedules(ScheduleDetail scheduleDetail, int cinemaHallId, int movieId){
         List<Schedule> schedules = scheduleDetail.getSchedules();
         List<TicketType> ticketTypes = scheduleDetail.getTicketTypes();

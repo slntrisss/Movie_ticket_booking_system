@@ -54,6 +54,8 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
             "join cinema c " +
             "    on c.cinema_id = ch.cinema_id " +
             "where c.cinema_id=?";
+    private static final String getHallName = "SELECT cinema_hall_id, hall_name " +
+            "FROM cinema_hall WHERE cinema_hall_id=?";
 
     public CinemaHallDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -67,6 +69,12 @@ public class CinemaHallDaoImpl implements CinemaHallDao {
     @Override
     public String getHall(int scheduleId) {
         return jdbcTemplate.queryForObject(getHallByScheduleId, String.class, scheduleId);
+    }
+
+    @Override
+    public CinemaHall getCinemaHallName(int hallId) {
+        return jdbcTemplate.queryForObject(getHallName,
+                new BeanPropertyRowMapper<>(CinemaHall.class), hallId);
     }
 
     @Override

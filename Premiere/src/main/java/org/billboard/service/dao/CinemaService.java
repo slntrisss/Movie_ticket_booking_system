@@ -41,6 +41,10 @@ public class CinemaService {
         return cinemaRepo.findOneById(cinemaId);
     }
 
+    public Cinema getCinemaName(int cinemaId){
+        return cinemaRepo.getCinemaName(cinemaId);
+    }
+
     public List<Cinema> getCinemaOrders(int movieId){
         return cinemaRepo.getCinemaOrders(movieId);
     }

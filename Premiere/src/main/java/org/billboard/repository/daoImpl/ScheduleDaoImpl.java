@@ -58,6 +58,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
     private static final String getSchedulesByHallId = "SELECT schedule_id " +
             "FROM schedule WHERE cinema_hall_id=?";
     private static final String deleteByHallId = "DELETE FROM schedule WHERE cinema_hall_id=?";
+    private static final String getSchedule = "SELECT * FROM schedule WHERE schedule_id=?";
 
     public ScheduleDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -92,6 +93,12 @@ public class ScheduleDaoImpl implements ScheduleDao {
     public List<Integer> getSchedulesByHallId(int hallId) {
         return jdbcTemplate.queryForList(getSchedulesByHallId, Integer.class,
                 hallId);
+    }
+
+    @Override
+    public Schedule getSchedule(int scheduleId) {
+        return jdbcTemplate.queryForObject(getSchedule,
+                new BeanPropertyRowMapper<>(Schedule.class), scheduleId);
     }
 
     @Override
