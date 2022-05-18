@@ -7,7 +7,7 @@ import org.billboard.filter.BookingFilter;
 import org.billboard.model.*;
 import org.billboard.repository.dao.BookingDao;
 import org.billboard.service.dao.*;
-import org.billboard.service.email.EmailSenderService;
+import org.billboard.service.message.email.EmailSenderService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,7 +67,7 @@ public class BookingService {
         seatService.reserve(reservedSeats, bookedSchedule.getHall().getCinemaHallId(),
                 bookedSchedule.getSchedule().getScheduleId());
 
-        emailSenderService.sendMail(bookedSchedule);
+        //emailSenderService.sendMail(bookedSchedule);
     }
 
     public List<BookedTicket> getBookedTickets(){

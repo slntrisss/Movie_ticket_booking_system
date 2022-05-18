@@ -1,8 +1,9 @@
-package org.billboard.service.email;
+package org.billboard.service.message.email;
 
 import org.billboard.dto.book.BookedSchedule;
 import org.billboard.model.CinemaSeat;
 import org.billboard.model.User;
+import org.billboard.service.message.MessageSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class EmailSenderService {
+public class EmailSenderService implements MessageSender {
     private final JavaMailSender mailSender;
 
     @Autowired
@@ -23,7 +24,8 @@ public class EmailSenderService {
         this.mailSender = mailSender;
     }
 
-    public void sendMail(BookedSchedule bookedSchedule){
+    @Override
+    public void sendMessage(BookedSchedule bookedSchedule) {
         User user = bookedSchedule.getUser();
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
